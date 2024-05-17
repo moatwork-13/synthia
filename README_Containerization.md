@@ -14,5 +14,5 @@ docker build -t nakamoto-miner -f Dockerfile .
 
 docker run -v ${PWD}:/app -v ~/.commune:/root/.commune -it -p 8080:8080 nakamoto-miner bash startup_script.sh
 
-
+docker compose up nakamoto-miner-1
 ```
