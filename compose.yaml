@@ -1,0 +1,15 @@
+version: '3'
+services:
+  nakamoto-miner-1:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
+      - /root/.commune:/root/.commune
+    ports:
+      - 8080:8080
+    # working_dir: /app
+    # entrypoint: ["/bin/bash", "-c", "/path/to/startup-script.sh"]
+    command: bash -c "/app/startup_script.sh"
+
