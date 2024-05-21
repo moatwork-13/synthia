@@ -1,22 +1,32 @@
 FROM python:3.12.3-bullseye
 
-RUN apt update && apt install -y tmux npm && npm install pm2@latest -g
+RUN apt-get update && \
+    apt-get install -y tmux npm curl libhdf5-dev && \
+    npm install pm2@latest -g
 
 SHELL ["/bin/bash", "-c"]
+
 WORKDIR /app
+
 COPY src /app/src
 COPY pyproject.toml /app
 COPY poetry.toml /app
 COPY poetry.lock /app
 COPY README.md /app
 
-RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | bash -s -- -y
-RUN curl -sSL https://install.python-poetry.org | python3 - -y
+# Explicitly copy startup_script.sh to the container. Don't rely on file mounts. This will inheret the file
+# permissions of the host system if it is mounted.
+COPY startup_script.sh /app
 
-ENV PATH="/root/.local/share/pypoetry/venv/bin:/usr/local/bin/:${PATH}"
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | bash -s -- -y && \
+    curl -sSL https://install.python-poetry.org | python3 - -y
 
+ENV PATH="/root/.cargo/bin:/root/.local/bin:${PATH}"
 
-RUN . "$HOME/.cargo/env" && poetry install
+RUN /bin/bash -c "source /root/.cargo/env && poetry install"
 
-CMD ["/bin/bash"]
+# Mark the container copy of the start up script as executable.
+RUN chmod +x /app/startup_script.sh
 
+# Set the default command - doesn't matter, the compose file will override this.
+CMD ["/bin/bash", "-c", "sleep infinity"]
