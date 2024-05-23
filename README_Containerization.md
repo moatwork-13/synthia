@@ -2,8 +2,6 @@
 
 ## Setup
 
-<!-- │ public_key   │ b2d6f6e811366761330ecc283619d5795ef4c9e456e06d7f068c1665c371fe1e │
- -->
 
 ```bash
 
@@ -17,9 +15,9 @@ source /root/.local/share/pypoetry/venv/bin/activate
 
 comx key create mamout-test
 
+echo "ANTHROPIC_API_KEY=YOUR_API_KEY" > anthropic_key.env
 
 docker compose up nakamoto-miner-1
-
 
 comx module register mamout-1 mamout-test --ip 194.163.148.58 --port 8080 --netuid 3  
 
