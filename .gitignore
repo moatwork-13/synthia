@@ -3,7 +3,9 @@
 /.venv
 /.direnv
 
-/.env
+/.idea
+
+/anthropic_key.env
 /env/**/*.env
 
 __pycache__
